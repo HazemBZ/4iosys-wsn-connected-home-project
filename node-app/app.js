@@ -14,7 +14,9 @@ server.on('connection', (socket) => {
   sockets.push(socket)
 
   socket.on('message', (msg)=>{
-    sockets.forEach( s => s.send(msg))
+    if (msg == "OPEN"){console.log("I HAVE TO OPEN");client.publish("command/123", "OPEN");}
+    if (msg == "CLOSE"){console.log("I HAVE TO CLOSE");client.publish("command/123", "CLOSE");}
+    sockets.forEach( s => s.send(msg));
     console.log("[Socket Server Received] " + msg);
   })
   socket.on('close', ()=>{
@@ -78,17 +80,20 @@ function publish(topic, message) {
 // SUBSCRIBE
 console.log("subscribing");
 let subTopic=""
-let subTopics = ["advertise", "state/123", "command/123"]
+let subTopics = ["advertise", "state/123", "command/123", "temp/123"]
 client.subscribe(subTopics, {qos:1})
 
 // RECEIVE
 console.log("receiving");
 client.on('message', (topic, message, packet) => {
   console.log(`[received] Topic: ${topic}, Message:${message}, Packet:${packet}`);
-  sockets.forEach( s => s.send(`|From Mqtt Server| [Topic]:${topic}, \n[Message]:${message}`))
+  console.log("|rerouting to sockets|");
+ // sockets.forEach( s => s.send(`|From Mqtt Server| [Topic]:${topic}, \n[Message]:${message}`))
+  sockets.forEach( s => s.send(JSON.stringify({topic: topic, data:String(message)})))
 })
 
 
 
 // terminate connection
 // client.end()
+
