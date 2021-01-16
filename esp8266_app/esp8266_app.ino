@@ -4,7 +4,7 @@
 //#include "Servo.h"
 #include "OneWire.h"
 #include "DallasTemperature.h"
-  
+#define RELAY 16 // equiv to d0
 
 
 bool eq = true;
@@ -44,7 +44,9 @@ PubSubClient client(espClient);
 void setup() {  // START SETUP
   // myservo.attach(servo_pin);
   // pinMode(LED_BUILTIN, OUTPUT);
-  // digitalWrite(LED_BUILTIN, LOW);
+  // digitalWrite(LED_BUILTIN, LOW)
+  pinMode(RELAY, OUTPUT);
+
   tempSensor.begin();
   Serial.begin(9600);
   // wifi connection 
@@ -139,7 +141,9 @@ void Blink() {
 }
 
 void closeLock(){
-  Blink();
+  // Blink();
+  Serial.println("CLOSING");
+  digitalWrite(RELAY, LOW);
    //move from 180 to 0 degrees with a negative angle of 5
   // for(angle = 180; angle>=1; angle-=5)
   // {                                
@@ -152,9 +156,12 @@ void closeLock(){
 // --- OPEN LOCK LOGIC HERE ---
 void openLock(){
   
-  Serial.print("ITS ON");       
-  Serial.print("=>  LOCK OPENED  <=");
-  Blink();
+  // Serial.print("ITS ON");       
+  // Serial.print("=>  LOCK OPENED  <=");
+  // Blink();
+  Serial.println("OPENING");
+  digitalWrite(RELAY, HIGH);
+  
    //move from 0 to 180 degrees with a positive angle of 1
   // for(angle = 0; angle < 180; angle += 5)
   // {                          
