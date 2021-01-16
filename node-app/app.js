@@ -72,7 +72,7 @@ function publish(topic, message) {
   }
 }
 
-let timer = setInterval(()=>{publish("advertise","9999");publish("state/9999", "AOK")}, 3000)
+// let timer = setInterval(()=>{publish("advertise","9999");publish("state/9999", "AOK")}, 3000)
 
 
 // SUBSCRIBE
