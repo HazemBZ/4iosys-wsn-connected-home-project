@@ -1,0 +1,3 @@
+[submodule "smart-front"]
+	path = smart-front
+	url = https://github.com/HazemBZ/wsn-connected-home-front
