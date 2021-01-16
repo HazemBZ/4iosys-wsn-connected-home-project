@@ -2,9 +2,10 @@ let mqtt = require('mqtt')
 const WebSocket = require('ws')
 
 
-
+// ========= WEBSOCKET ============
 // websocket Server setup
 const server = new WebSocket.Server({
+  host:"0.0.0.0",
   port:8000
 })
 
@@ -14,12 +15,17 @@ server.on('connection', (socket) => {
 
   socket.on('message', (msg)=>{
     sockets.forEach( s => s.send(msg))
-    console.log("[Received] " + msg);
+    console.log("[Socket Server Received] " + msg);
   })
   socket.on('close', ()=>{
     sockets.filter( s => s !== socket)
   })
 })
+
+// =================================
+
+
+// ========= MQTT ==============
 
 // mqtt setup 
 const IP = "192.168.1.13";
@@ -33,6 +39,8 @@ let options = {
   password:"password",
   clean:true
 };
+
+
 
 let client = mqtt.connect(ENDPOINT)
 
@@ -77,6 +85,7 @@ client.subscribe(subTopics, {qos:1})
 console.log("receiving");
 client.on('message', (topic, message, packet) => {
   console.log(`[received] Topic: ${topic}, Message:${message}, Packet:${packet}`);
+  sockets.forEach( s => s.send(`|From Mqtt Server| [Topic]:${topic}, \n[Message]:${message}`))
 })
 
 
