@@ -7,10 +7,10 @@
   
 
 
-//bool eq = true;
-//bool c_eq = true;
-//bool open_the_lock = false;
-//bool close_the_lock = false;
+bool eq = true;
+bool c_eq = true;
+bool open_the_lock = false;
+bool close_the_lock = false;
 const char* ssid = "PLANET_007"; // Broker server Netwoek
 const char* password = "hamatari";  // Network pwd
 const char* mqttServer ="192.168.1.13";  // Broker ip (raspi) 
@@ -187,6 +187,8 @@ void loop() { // keep publishing state at regular intervals
   tempSensor.requestTemperatures();
   
   // publish temp data
-  client.publish(TEMPERATURE_CHANNEL, tempSensor.getTempCByIndex(0))
+  char res[8];
+  dtostrf(tempSensor.getTempCByIndex(0), 6, 2, res);
+  client.publish(TEMPERATURE_CHANNEL, (char*)res);
   delay(PUBLISH_INTERVAL);
 }
